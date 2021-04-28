@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室</title>
+</head>
+<body>
+<div class="title" style="display: inline-block">当前聊天室<span id="count">0</span>人</div>
+<hr/>
+<div>
+    <div>内容区</div>
+    <div id="aaa" class="conten title">
+
+    </div>
+</div>
+
+<div class="fasong title">
+    <textarea id="textxinxi" class="xinxi"></textarea>
+    <input type="button" value="发送" class="fasongbtn" onclick="fasong()">
+</div>
+
+
+<script>
+    var name = "{$name}";
+    ws = new WebSocket("ws://127.0.0.1:2345");
+    ws.onopen = function() {
+        var uid = name;
+        ws.send(uid);
+    };
+    ws.onmessage = function(e) {
+        var aaa = document.getElementById('aaa');
+        var count = document.getElementById('count');
+        var data = e.data.split('||')[0];//根据||截取字符串，前面为放内容，后面为当前聊天室人数
+        var count1 = e.data.split('||')[1];
+        aaa.innerHTML += data + '<br/>';// 插入新的两天内容
+        count.innerHTML = count1;// 修改聊天室人数
+    };
+
+    function fasong() {
+        let textxinxi = document.getElementById('textxinxi').value;
+        let text = '';
+        document.getElementById('textxinxi').value = text;//发送新内容
+        ws.send(textxinxi);
+    }
+</script>
+</body>
+</html>
